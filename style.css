@@ -1,3 +1,7 @@
+/* ==========================================
+   PARTE 1: BASE DE LA INTERFAZ Y TARJETA CRISTAL
+   ========================================== */
+
 body {
   /* Paleta de colores estilo tornasol / iridiscente */
   background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
@@ -11,7 +15,7 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  overflow: hidden; /* Evita barras de desplazamiento por las burbujas y confeti */
+  overflow: hidden; /* Evita barras de desplazamiento por los efectos visuales */
 }
 
 /* Lógica del movimiento de los colores tornasol */
@@ -35,7 +39,7 @@ body {
   width: 100%;
   text-align: center;
   backdrop-filter: blur(5px); /* Suave desenfoque detrás de la tarjeta */
-  z-index: 10; /* Asegura que la tarjeta esté por encima de los efectos de fondo */
+  z-index: 10; /* La tarjeta se mantiene en un nivel intermedio */
 }
 
 h2 { 
@@ -52,17 +56,10 @@ h2 {
   animation: parpadeoArcade 1.5s infinite steps(2);
 }
 
-/* Animación que hace aparecer y desaparecer la sombra neón rápidamente */
 @keyframes parpadeoArcade {
-  0%, 100% {
-    text-shadow: 2px 2px 0px #39FF14;
-  }
-  50% {
-    text-shadow: none;
-    color: #222;
-  }
+  0%, 100% { text-shadow: 2px 2px 0px #39FF14; }
+  50% { text-shadow: none; color: #222; }
 }
-
 
 /* CARITA GRANDE CON EFECTO 3D ESFÉRICO */
 .carita {
@@ -102,17 +99,16 @@ h2 {
   position: absolute;
   top: 100px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  animation: parpadeoAutomatico 4s infinite linear; /* Parpadeo automático */
+  animation: parpadeoAutomatico 4s infinite linear;
 }
 .ojo.izquierdo { left: 75px; }
 .ojo.derecho { right: 75px; }
 
 @keyframes parpadeoAutomatico {
   0%, 95%, 100% { transform: scaleY(1); }
-  97%, 99% { transform: scaleY(0.1); } /* Cierre rápido del ojo */
+  97%, 99% { transform: scaleY(0.1); }
 }
 
-/* CEJAS MÓVILES */
 .cejas-container {
   position: absolute;
   top: 60px;
@@ -132,7 +128,6 @@ h2 {
   box-shadow: 0 3px 4px rgba(0,0,0,0.2);
 }
 
-/* BOCA BASE (Cambia en JavaScript) */
 .boca {
   position: absolute;
   bottom: 65px;
@@ -155,8 +150,11 @@ h2 {
   letter-spacing: 1px;
 }
 
+/* ==========================================
+   PARTE 2: CONTROLES Y EFECTOS DE PARTÍCULAS
+   ========================================== */
 
-/* --- PERSONALIZACIÓN DE LA BARRA DE RANGO --- */
+/* PERSONALIZACIÓN DE LA BARRA DE RANGO */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -170,20 +168,18 @@ input[type="range"] {
   transition: background 0.4s ease;
 }
 
-/* EL BOTÓN DESLIZABLE REGRESA A SER UN CÍRCULO (Para Google Chrome, Edge y Safari) */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #4CAF50; /* El color real cambiará dinámicamente con JavaScript */
+  background: #4CAF50;
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0,0,0,0.25), inset 0 2px 2px rgba(255,255,255,0.4);
   transition: background 0.4s ease, transform 0.1s ease;
 }
 
-/* EL BOTÓN DESLIZABLE REGRESA A SER UN CÍRCULO (Para Mozilla Firefox) */
 input[type="range"]::-moz-range-thumb {
   width: 24px;
   height: 24px;
@@ -195,18 +191,17 @@ input[type="range"]::-moz-range-thumb {
   transition: background 0.4s ease, transform 0.1s ease;
 }
 
-/* Efecto cuando presionas el círculo */
 input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.2); }
 input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
 
-/* --- ESTILO ADAPTADO PARA LOS LENTES DEL ESTADO GENIAL GIGANTE --- */
+/* ESTILO ADAPTADO PARA LOS LENTES COOL */
 .carita.genial .ojo {
   width: 60px;
   height: 38px;
   background-color: #111;
   border-radius: 6px 6px 25px 25px;
   top: 95px;
-  animation: none; /* Desactiva el parpadeo cuando tiene lentes oscuros */
+  animation: none;
 }
 .carita.genial .ojo.izquierdo { left: 60px; }
 .carita.genial .ojo.derecho { right: 60px; }
@@ -221,7 +216,7 @@ input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
   background-color: #111;
 }
 
-/* --- EFECTO DE BURBUJAS FLOTANTES NATIVAS --- */
+/* EFECTO DE BURBUJAS FLOTANTES NATIVAS */
 .burbuja {
   position: absolute;
   bottom: -20px;
@@ -243,7 +238,7 @@ input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
   100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
 }
 
-/* --- EFECTO DE CONFETI NATIVO PROPIO --- */
+/* EFECTO DE CONFETI NATIVO PROPIO */
 .pedazo-confeti {
   position: absolute;
   top: -20px;
@@ -261,12 +256,12 @@ input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
   100% { transform: translateY(105vh) rotate(720deg) translateX(50px); opacity: 0; }
 }
 
-/* --- EFECTO DE ZETAS FLOTANTES (ESTADO CANSADO) --- */
+/* EFECTO DE ZETAS FLOTANTES (ESTADO CANSADO) */
 .zeta-sueno {
   position: absolute;
   bottom: -40px;
-  font-family: 'Black Ops One', serif; /* Mantiene la estética gamer */
-  color: #607D8B; /* Color a juego con el estado cansado */
+  font-family: 'Black Ops One', serif;
+  color: #607D8B;
   font-weight: bold;
   pointer-events: none;
   z-index: 5;
@@ -275,23 +270,141 @@ input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
 }
 
 @keyframes flotarZetas {
+  0% { transform: translateY(0) scale(0.3) rotate(-15deg); opacity: 0; }
+  15% { opacity: 0.7; }
+  50% { transform: translateY(-50vh) scale(0.9) rotate(15deg) translateX(40px); }
+  100% { transform: translateY(-105vh) scale(1.5) rotate(-10deg) translateX(-30px); opacity: 0; }
+}
+
+/* NUEVO: EFECTO DE LLUVIA CON REBOTE FRONTAL EXCLUSIVO (ESTADO TRISTE) */
+.lluvia-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; 
+  z-index: 20; /* Pasado al frente por encima de la tarjeta blanca */
+  overflow: hidden;
+}
+
+.gota-lluvia {
+  position: absolute;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.6));
+  width: 2px;
+  height: 25px;
+  pointer-events: none;
+}
+
+/* Partícula de rebote / salpicadura */
+.salpicadura {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: rebotarSplash 0.4s ease-out forwards;
+}
+
+@keyframes rebotarSplash {
   0% {
-    /* Empieza pequeña, abajo y con una ligera inclinación */
-    transform: translateY(0) scale(0.3) rotate(-15deg);
-    opacity: 0;
-  }
-  15% {
-    /* Aparece suavemente a la vista */
-    opacity: 0.7;
-  }
-  50% {
-    /* A mitad de camino ya creció y se mueve en zigzag a la derecha */
-    transform: translateY(-50vh) scale(0.9) rotate(15deg) translateX(40px);
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
   }
   100% {
-    /* Llega arriba con el tamaño máximo y se desvanece */
-    transform: translateY(-105vh) scale(1.5) rotate(-10deg) translateX(-30px);
+    /* Explota hacia arriba en parábola con las variables calculadas por JS */
+    transform: translate(var(--x-dir), var(--y-dir)) scale(0.2);
     opacity: 0;
   }
 }
 
+/* --- EFECTO DE RELÁMPAGO DE TORMENTA (ESTADO TRISTE) --- */
+body.relampago {
+  /* Genera un flash blanco intenso sobre el fondo actual */
+  background: #ffffff !important;
+  animation: destelloRayo 0.4s ease-out;
+}
+
+@keyframes destelloRayo {
+  0% { opacity: 1; }
+  20% { opacity: 0.7; }
+  40% { opacity: 1; } /* Simula el doble parpadeo típico de un rayo */
+  100% { opacity: 1; }
+}
+
+/* --- AMBIENTACIÓN OSCURA PARA LA TORMENTA (ESTADO 1) --- */
+body.tormenta-activa {
+  /* Sobrescribe el fondo tornasol por un gradiente gris oscuro de tormenta */
+  background: linear-gradient(-45deg, #1f2937, #111827, #374151, #111827) !important;
+  background-size: 400% 400%;
+}
+
+body.tormenta-activa.relampago {
+  /* Cuando hay relámpago, la pantalla destella a blanco brillante */
+  background: #ffffff !important;
+  animation: destelloRayo 0.4s ease-out;
+}
+
+/* --- ESTRELLITAS BRILLANTES (ESTADO 5: FELIZ) --- */
+.estrella-brillante {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  /* Forma geométrica retro de estrella de 4 puntas */
+  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  pointer-events: none;
+  z-index: 1;
+  animation: brillarEstrealla 1.2s ease-in-out forwards;
+}
+
+@keyframes brillarEstrealla {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 0;
+    background-color: #FFF59D;
+  }
+  50% {
+    opacity: 1;
+    transform: translate(var(--x-mov), var(--y-mov)) scale(1.2) rotate(180deg);
+    background-color: #FFF59D;
+    box-shadow: 0 0 10px #FFEB3B;
+  }
+  100% {
+    transform: translate(var(--x-mov), var(--y-mov)) scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* --- EFECTO DE HOJAS SECAS (ESTADO 3: UN POCO DESANIMADO) --- */
+.hoja-seca {
+  position: absolute;
+  top: -20px;
+  width: 14px;
+  height: 9px;
+  background-color: #a6b1b7; /* Gris azulado apagado y nostálgico */
+  border-radius: 50% 0; /* Geometría simple de hoja retro */
+  pointer-events: none;
+  z-index: 1; /* Cae por detrás de la tarjeta cristal */
+  animation: caerHojaPausada 5s ease-in-out forwards;
+}
+
+@keyframes caerHojaPausada {
+  0% {
+    transform: translateY(0) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  50% {
+    /* Balanceo hacia la derecha a mitad del camino */
+    transform: translateY(50vh) rotate(180deg) translateX(40px);
+  }
+  100% {
+    /* Balanceo hacia la izquierda al llegar al fondo */
+    transform: translateY(105vh) rotate(360deg) translateX(-30px);
+    opacity: 0;
+  }
+}
