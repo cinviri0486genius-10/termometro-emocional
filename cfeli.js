@@ -10,6 +10,13 @@ const boca = document.getElementById('boca');
 const textoEmocion = document.getElementById('texto-emocion');
 const contenedorLluvia = document.getElementById('lluvia-container');
 
+// Elementos para el registro personalizado y borrado de memoria
+const modalRegistro = document.getElementById('modal-registro');
+const inputNombre = document.getElementById('nombre-usuario');
+const btnGuardarNombre = document.getElementById('btn-guardar-nombre');
+const tituloH2 = document.querySelector('.termometro-emocional h2');
+const btnCambiarUsuario = document.getElementById('btn-cambiar-usuario');
+
 // Estilos de sombreado 3D para la esfera de la carita
 const sombra3D = `
   inset -10px -15px 30px rgba(0, 0, 0, 0.25),
@@ -91,7 +98,6 @@ function reproducirSonidoTrueno() {
   fuenteRuido.start();
 }
 
-// Función auxiliar para pintar el carril del slider de forma dinámica
 function actualizarColorBarra(color) {
   slider.style.background = `${color}40`;
   let estiloThumb = document.getElementById('estilo-thumb');
@@ -106,7 +112,7 @@ function actualizarColorBarra(color) {
   `;
 }
 
-// Color inicial de la barra por defecto (Nivel 4: Calmado)
+// Pintar color base verde inicial
 actualizarColorBarra("#4CAF50");
 
 // ==========================================
@@ -243,7 +249,7 @@ slider.addEventListener('input', (e) => {
   if (intervaloEstrellas) { clearInterval(intervaloEstrellas); intervaloEstrellas = null; }
   if (intervaloHojas) { clearInterval(intervaloHojas); intervaloHojas = null; }
   
-  // Purgado estructural en caliente del DOM para evitar acumulación de código residual
+  // Purgado estructural del DOM para evitar acumulación de partículas
   document.body.classList.remove('relampago', 'tormenta-activa');
   contenedorLluvia.innerHTML = '';
   document.querySelectorAll('.estrella-brillante').forEach(est => est.remove());
@@ -380,5 +386,87 @@ slider.addEventListener('input', (e) => {
       intervaloConfeti = setInterval(crearPedazoConfeti, 80);
       reproducirSonidoGamer(0, 'triangle', true);
       break;
+  }
+});
+
+// ==========================================
+// PARTE 4: PERSISTENCIA, PERSONALIZACIÓN E HISTORIAL
+// ==========================================
+
+function guardarRegistroEmocion(nivelEmocion) {
+  const nombreNino = localStorage.getItem('nombreNino') || 'Invitado';
+  
+  const emocionesTexto = {
+    1: "Triste / Molesto 😢",
+    2: "Cansado / Sin energía 🥱",
+    3: "Un poco desanimado 😐",
+    4: "Calmado / Bien 😌",
+    5: "¡Feliz! 😄",
+    6: "¡Súper Emocionado! 🤩",
+    7: "¡Genial / Cool! 😎"
+  };
+
+  const ahora = new Date();
+  const fechaFormateada = ahora.toLocaleDateString() + ' a las ' + ahora.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+  const nuevoRegistro = {
+    nombre: nombreNino,
+    emocion: emocionesTexto[nivelEmocion],
+    fecha: fechaFormateada
+  };
+
+  let historial = JSON.parse(localStorage.getItem('historialEmociones')) || [];
+  historial.unshift(nuevoRegistro);
+  
+  localStorage.setItem('historialEmociones', JSON.stringify(historial));
+  localStorage.setItem('ultimaEmocion', nivelEmocion);
+  
+  console.log("Historial guardado en el navegador:", historial);
+}
+
+// Guardar nombre inicial
+btnGuardarNombre.addEventListener('click', () => {
+  const nombreIngresado = inputNombre.value.trim();
+  
+  if (nombreIngresado !== "") {
+    localStorage.setItem('nombreNino', nombreIngresado);
+    tituloH2.textContent = `¿Cómo te sientes hoy, ${nombreIngresado}?`;
+    modalRegistro.classList.add('oculto');
+    guardarRegistroEmocion(parseInt(slider.value));
+  } else {
+    inputNombre.style.borderColor = "#E91E63";
+  }
+});
+
+// Guardar bitácora cada vez que el niño suelta el slider
+slider.addEventListener('change', (e) => {
+  guardarRegistroEmocion(parseInt(e.target.value));
+});
+
+// Cargar datos guardados al iniciar
+window.addEventListener('DOMContentLoaded', () => {
+  const nombreGuardado = localStorage.getItem('nombreNino');
+  const ultimaEmocionGuardada = localStorage.getItem('ultimaEmocion');
+  
+  if (nombreGuardado) {
+    modalRegistro.classList.add('oculto');
+    tituloH2.textContent = `¿Cómo te sientes hoy, ${nombreGuardado}?`;
+    
+    if (ultimaEmocionGuardada) {
+      slider.value = ultimaEmocionGuardada;
+      slider.dispatchEvent(new Event('input'));
+    }
+  }
+});
+
+// EVENTO INTERACTIVO: Borrar datos para cambiar de niño(a)
+btnCambiarUsuario.addEventListener('click', () => {
+  const confirmar = confirm("¿Quieres registrar a un niño o niña diferente? Se borrará el nombre actual y el historial.");
+  
+  if (confirmar) {
+    localStorage.removeItem('nombreNino');
+    localStorage.removeItem('ultimaEmocion');
+    localStorage.removeItem('historialEmociones');
+    window.location.reload(); // Recarga y abre el modal limpio
   }
 });
