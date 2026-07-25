@@ -1,19 +1,29 @@
 body {
-  /* Enlace directo y actualizado a una imagen de nubes pastel */
-  background-image: linear-gradient(rgba(238, 242, 245, 0.3), rgba(238, 242, 245, 0.3)), 
-                    url('https://unsplash.com');
+  /* Paleta de colores estilo tornasol / iridiscente */
+  background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
+  background-size: 400% 400%;
   
-  /* Ajustes esenciales de pantalla completa */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  /* Animación continua para simular el reflejo tornasol */
+  animation: efectoTornasol 12s ease infinite;
   
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+}
+
+/* Lógica del movimiento de los colores tornasol */
+@keyframes efectoTornasol {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 
@@ -121,3 +131,26 @@ input[type="range"] {
   width: 90%;
   cursor: pointer;
 }
+
+/* Estilo para los lentes de sol en el estado Genial */
+.carita.genial .ojo {
+  width: 32px;
+  height: 20px;
+  background-color: #111;
+  border-radius: 4px 4px 15px 15px;
+  top: 48px;
+}
+.carita.genial .ojo.izquierdo { left: 28px; }
+.carita.genial .ojo.derecho { right: 28px; }
+
+/* Puente de los lentes */
+.carita.genial::after {
+  content: '';
+  position: absolute;
+  top: 52px;
+  left: 65px;
+  width: 20px;
+  height: 5px;
+  background-color: #111;
+}
+
