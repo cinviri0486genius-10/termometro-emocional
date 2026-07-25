@@ -1,0 +1,123 @@
+body {
+  /* Enlace directo y actualizado a una imagen de nubes pastel */
+  background-image: linear-gradient(rgba(238, 242, 245, 0.3), rgba(238, 242, 245, 0.3)), 
+                    url('https://unsplash.com');
+  
+  /* Ajustes esenciales de pantalla completa */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+
+.termometro-emocional {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
+  background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco semi-transparente */
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(5px); /* Suave desenfoque detrás de la tarjeta */
+}
+
+h2 { 
+  color: #333; 
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.carita {
+  width: 150px;
+  height: 150px;
+  background-color: #A5D6A7;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.4s ease;
+  margin: 20px 0;
+  box-shadow: 
+    inset -10px -15px 30px rgba(0, 0, 0, 0.25),
+    inset 10px 15px 25px rgba(255, 255, 255, 0.4),
+    0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.carita::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 25px;
+  width: 100px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0));
+  border-radius: 50% / 100% 100% 0 0;
+}
+
+.ojo {
+  width: 18px;
+  height: 18px;
+  background-color: #222;
+  border-radius: 50%;
+  position: absolute;
+  top: 50px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.ojo.izquierdo { left: 40px; }
+.ojo.derecho { right: 40px; }
+
+.cejas-container {
+  position: absolute;
+  top: 28px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 22px;
+  box-sizing: border-box;
+}
+
+.ceja {
+  width: 28px;
+  height: 7px;
+  background-color: #222;
+  border-radius: 4px;
+  transition: all 0.4s ease;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+}
+
+.boca {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: transparent;
+  transition: all 0.4s ease;
+  width: 35px;
+  height: 15px;
+  border-bottom: 6px solid #222;
+  border-radius: 0 0 35px 35px;
+}
+
+.texto-emocion {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 15px 0;
+  text-transform: uppercase;
+  color: #4CAF50;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
+}
+
+input[type="range"] {
+  width: 90%;
+  cursor: pointer;
+}
