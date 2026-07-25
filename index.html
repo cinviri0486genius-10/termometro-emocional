@@ -12,9 +12,19 @@
 </head>
 <body>
 
-  <!-- CAPA DE FONDO INDISPENSABLE: Aquí se generarán las gotas dinámicamente con JavaScript -->
+  <!-- VENTANA DE REGISTRO DE NOMBRE (MODAL ARCADE) -->
+  <div id="modal-registro" class="modal-registro">
+    <div class="tarjeta-registro">
+      <h3>¡Hola! ¿Cómo te llamas?</h3>
+      <input type="text" id="nombre-usuario" placeholder="Escribe tu nombre aquí...">
+      <button id="btn-guardar-nombre">Entrar</button>
+    </div>
+  </div>
+
+  <!-- CAPA DE FONDO FRONTAL: Aquí se generarán las gotas dinámicamente con JavaScript -->
   <div id="lluvia-container" class="lluvia-container"></div>
 
+  <!-- TARJETA CONTENEDORA PRINCIPAL -->
   <div class="termometro-emocional">
     <h2>¿Cómo te sientes hoy?</h2>
     <div id="carita" class="carita">
@@ -28,8 +38,10 @@
     </div>
     
     <p id="texto-emocion" class="texto-emocion">Calmado / Bien 😌</p>
-    <!-- Recuerda verificar que el max de tu barra sea 7 -->
     <input type="range" id="control-emocion" min="1" max="7" value="4" step="1">
+
+    <!-- BOTÓN MULTI-USUARIO: Permite borrar la memoria y registrar a otro niño -->
+    <button id="btn-cambiar-usuario" class="btn-cambiar-usuario">Cambiar de Niño(a) 🔄</button>
   </div>
 
   <!-- LÍNEA INDISPENSABLE: Carga el motor de partículas de confeti en el navegador -->
