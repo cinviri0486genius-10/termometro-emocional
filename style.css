@@ -408,3 +408,90 @@ body.tormenta-activa.relampago {
     opacity: 0;
   }
 }
+
+/* --- VENTANA DE BIENVENIDA (REGISTRO) --- */
+.modal-registro {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Siempre al frente de todo */
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.modal-registro.oculto {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tarjeta-registro {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  font-family: 'Comic Sans MS', sans-serif;
+  max-width: 320px;
+  width: 100%;
+}
+
+.tarjeta-registro h3 {
+  margin-top: 0;
+  color: #222;
+}
+
+.tarjeta-registro input {
+  width: 90%;
+  padding: 10px;
+  border: 2px solid #b0bec5;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.tarjeta-registro button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.1s;
+}
+
+.tarjeta-registro button:active { transform: scale(0.95); }
+
+/* --- BOTÓN PARA CAMBIAR DE USUARIO (RESET) --- */
+.btn-cambiar-usuario {
+  background-color: transparent;
+  color: #78909c; /* Gris azulado discreto */
+  border: 2px dashed #b0bec5;
+  padding: 8px 15px;
+  font-family: 'Comic Sans MS', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+  z-index: 15; /* Por encima de la lluvia */
+}
+
+.btn-cambiar-usuario:hover {
+  background-color: #ffebee; /* Fondo rojizo suave al pasar el mouse */
+  color: #d32f2f;
+  border: 2px solid #ef5350;
+  transform: scale(1.05);
+}
+
+.btn-cambiar-usuario:active {
+  transform: scale(0.95);
+}
