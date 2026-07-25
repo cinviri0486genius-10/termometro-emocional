@@ -1,3 +1,7 @@
+// ==========================================
+// PARTE 1: CONFIGURACIÓN GENERAL Y ELEMENTOS
+// ==========================================
+
 const slider = document.getElementById('control-emocion');
 const carita = document.getElementById('carita');
 const cejaIzq = document.getElementById('ceja-izq');
@@ -14,10 +18,55 @@ const sombra3D = `
 
 let intervaloBurbujas = null;
 let intervaloConfeti = null;
+let intervaloZetas = null;
+
+// FUNCIÓN NATIVA PARA GENERAR SONIDOS GAMER PERSONALIZADOS POR NIVEL
+function reproducirSonidoGamer(frecuenciaBase, tipoOnda = 'square', esEstrella = false) {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  
+  // EFECTO MÁGICO DE ESTRELLA (Nivel Genial / Cool)
+  if (esEstrella) {
+    const notasEstrella = [1046.50, 1318.51, 1567.98, 2093.00]; // Do, Mi, Sol, Do (Octava alta)
+    notasEstrella.forEach((frec, indice) => {
+      setTimeout(() => {
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.type = 'triangle'; // Onda suave para destellos brillantes
+        osc.frequency.setValueAtTime(frec, ctx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
+        
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.15);
+      }, indice * 60); // Desfase rápido tipo arpegio retro
+    });
+    return;
+  }
+
+  // TONOS GAMER ESTÁNDAR PARA EL RESTO DE EMOCIONES
+  const osc = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  
+  osc.type = tipoOnda;
+  osc.frequency.setValueAtTime(frecuenciaBase, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(frecuenciaBase * 2, ctx.currentTime + 0.08);
+  
+  gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+  
+  osc.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.12);
+}
 
 // Función para pintar el carril y el circulito deslizante de forma segura
 function actualizarColorBarra(color) {
-  slider.style.background = `${color}40`; // Fondo de la barra con transparencia
+  slider.style.background = `${color}40`;
   
   let estiloThumb = document.getElementById('estilo-thumb');
   if (!estiloThumb) {
@@ -25,7 +74,6 @@ function actualizarColorBarra(color) {
     estiloThumb.id = 'estilo-thumb';
     document.head.appendChild(estiloThumb);
   }
-  // Inyecta el color dinámicamente en el circulito para Chrome, Edge, Safari y Firefox
   estiloThumb.innerHTML = `
     input[type="range"]::-webkit-slider-thumb { background: ${color} !important; }
     input[type="range"]::-moz-range-thumb { background: ${color} !important; }
@@ -63,8 +111,26 @@ function crearPedazoConfeti() {
   setTimeout(() => { confeti.remove(); }, 4000);
 }
 
-// Establecer color inicial verde para el estado por defecto "Calmado" (Nivel 4)
+// FÁBRICA NATIVA DE ZETAS FLOTANTES
+function crearZeta() {
+  const zeta = document.createElement('div');
+  zeta.classList.add('zeta-sueno');
+  zeta.textContent = "Z";
+  
+  zeta.style.fontSize = "20px"; 
+  zeta.style.left = Math.random() * 100 + "vw";
+  zeta.style.animationDuration = Math.random() * 2 + 3 + "s";
+  
+  document.body.appendChild(zeta);
+  setTimeout(() => { zeta.remove(); }, 5000);
+}
+
+// Color inicial verde para el estado por defecto "Calmado" (Nivel 4)
 actualizarColorBarra("#4CAF50");
+
+// ==========================================
+// PARTE 2: LÓGICA DEL CONTROL Y CAMBIO DE EMOCIÓN
+// ==========================================
 
 slider.addEventListener('input', (e) => {
   const estado = parseInt(e.target.value);
@@ -75,9 +141,10 @@ slider.addEventListener('input', (e) => {
   boca.style.backgroundColor = 'transparent';
   boca.style.transform = "translateX(-50%) rotate(0deg)";
   
-  // Detener fábricas activas al cambiar de emoción
+  // Detener todas las fábricas activas al cambiar de emoción
   if (intervaloBurbujas) { clearInterval(intervaloBurbujas); intervaloBurbujas = null; }
   if (intervaloConfeti) { clearInterval(intervaloConfeti); intervaloConfeti = null; }
+  if (intervaloZetas) { clearInterval(intervaloZetas); intervaloZetas = null; }
 
   switch(estado) {
     case 1: // TRISTE / MOLESTO
@@ -93,6 +160,8 @@ slider.addEventListener('input', (e) => {
       boca.style.height = "40px";
       boca.style.borderTop = "10px solid #222";
       boca.style.borderRadius = "40px 40px 0 0";
+      
+      reproducirSonidoGamer(150, 'sawtooth'); // Tono grave/enojado
       break;
 
     case 2: // CANSADO
@@ -108,6 +177,9 @@ slider.addEventListener('input', (e) => {
       boca.style.height = "24px";
       boca.style.border = "8px solid #222";
       boca.style.borderRadius = "50% / 10% 10% 90% 90%";
+      
+      intervaloZetas = setInterval(crearZeta, 300); // Inicia ráfaga de Zetas
+      reproducirSonidoGamer(200, 'triangle'); // Tono de baja energía
       break;
 
     case 3: // UN POCO DESANIMADO
@@ -123,6 +195,8 @@ slider.addEventListener('input', (e) => {
       boca.style.height = "12px";
       boca.style.backgroundColor = "#222";
       boca.style.borderRadius = "0";
+      
+      reproducirSonidoGamer(280, 'square'); // Click neutro
       break;
 
     case 4: // CALMADO / BIEN
@@ -138,6 +212,8 @@ slider.addEventListener('input', (e) => {
       boca.style.height = "30px";
       boca.style.borderBottom = "10px solid #222";
       boca.style.borderRadius = "0 0 70px 70px";
+      
+      reproducirSonidoGamer(380, 'square'); // Sonido medio
       break;
 
     case 5: // FELIZ
@@ -153,9 +229,11 @@ slider.addEventListener('input', (e) => {
       boca.style.height = "50px";
       boca.style.borderBottom = "10px solid #222";
       boca.style.borderRadius = "0 0 100px 100px";
+      
+      reproducirSonidoGamer(520, 'square'); // Sonido agudo alegre
       break;
 
-    case 6: // SÚPER EMOCIONADO (Enciende burbujas)
+    case 6: // SÚPER EMOCIONADO
       textoEmocion.textContent = "¡Súper Emocionado! 🤩";
       textoEmocion.style.color = "#E91E63";
       carita.style.backgroundColor = "#FF4081";
@@ -170,9 +248,10 @@ slider.addEventListener('input', (e) => {
       boca.style.borderRadius = "50%";
       
       intervaloBurbujas = setInterval(crearBurbuja, 200); 
+      reproducirSonidoGamer(680, 'square'); // Sonido de victoria rápido
       break;
 
-    case 7: // GENIAL (Enciende burbujas + lluvia de confeti)
+    case 7: // GENIAL / COOL (Burbujas + Confeti + Estrellas)
       textoEmocion.textContent = "¡Genial / Cool! 😎";
       textoEmocion.style.color = "#7B1FA2";
       carita.style.backgroundColor = "#E040FB";
@@ -190,6 +269,7 @@ slider.addEventListener('input', (e) => {
       
       intervaloBurbujas = setInterval(crearBurbuja, 200);
       intervaloConfeti = setInterval(crearPedazoConfeti, 80); 
+      reproducirSonidoGamer(0, 'triangle', true); // Sonido mágico arpegiado
       break;
   }
 });
