@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Termómetro Emocional 3D</title>
-  
-  <!-- ESTA ES LA LÍNEA CRUCIAL QUE CONECTA EL CSS CON TU HTML -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,10 +21,14 @@
     </div>
     
     <p id="texto-emocion" class="texto-emocion">Calmado / Bien 😌</p>
-     <input type="range" id="control-emocion" min="1" max="7" value="4" step="1">
+    <!-- Recuerda verificar que el max de tu barra sea 7 -->
+    <input type="range" id="control-emocion" min="1" max="7" value="4" step="1">
   </div>
 
-  <!-- Vinculación del archivo JavaScript -->
+  <!-- LÍNEA INDISPENSABLE: Carga el motor de partículas de confeti en el navegador -->
+  <script src="https://jsdelivr.net"></script>
+  
+  <!-- Tu archivo de lógica JavaScript -->
   <script src="cfeli.js"></script>
 </body>
 </html>
