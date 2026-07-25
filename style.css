@@ -39,10 +39,30 @@ body {
 }
 
 h2 { 
-  color: #333; 
-  font-size: 24px;
+  font-family: 'Black Ops One', serif;
+  font-size: 32px; /* Tamaño de impacto visual */
+  color: #111; /* Color base oscuro para contraste */
+  text-shadow: 2px 2px 0px #39FF14; /* Sombra verde neón estilo HUD gamer */
+  text-transform: uppercase; /* Fuerza las mayúsculas */
+  letter-spacing: 2px; /* Espaciado entre letras */
   margin-top: 0;
+  margin-bottom: 5px;
+  
+  /* Lógica de la animación de parpadeo arcade */
+  animation: parpadeoArcade 1.5s infinite steps(2);
 }
+
+/* Animación que hace aparecer y desaparecer la sombra neón rápidamente */
+@keyframes parpadeoArcade {
+  0%, 100% {
+    text-shadow: 2px 2px 0px #39FF14;
+  }
+  50% {
+    text-shadow: none;
+    color: #222;
+  }
+}
+
 
 /* CARITA GRANDE CON EFECTO 3D ESFÉRICO */
 .carita {
@@ -127,13 +147,14 @@ h2 {
 }
 
 .texto-emocion {
+  font-family: 'Black Ops One', serif;
   font-size: 22px;
-  font-weight: bold;
   margin: 15px 0;
   text-transform: uppercase;
   color: #4CAF50;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
+  letter-spacing: 1px;
 }
+
 
 /* --- PERSONALIZACIÓN DE LA BARRA DE RANGO --- */
 input[type="range"] {
@@ -239,3 +260,38 @@ input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
   0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
   100% { transform: translateY(105vh) rotate(720deg) translateX(50px); opacity: 0; }
 }
+
+/* --- EFECTO DE ZETAS FLOTANTES (ESTADO CANSADO) --- */
+.zeta-sueno {
+  position: absolute;
+  bottom: -40px;
+  font-family: 'Black Ops One', serif; /* Mantiene la estética gamer */
+  color: #607D8B; /* Color a juego con el estado cansado */
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 5;
+  animation: flotarZetas 4s ease-in forwards;
+  opacity: 0;
+}
+
+@keyframes flotarZetas {
+  0% {
+    /* Empieza pequeña, abajo y con una ligera inclinación */
+    transform: translateY(0) scale(0.3) rotate(-15deg);
+    opacity: 0;
+  }
+  15% {
+    /* Aparece suavemente a la vista */
+    opacity: 0.7;
+  }
+  50% {
+    /* A mitad de camino ya creció y se mueve en zigzag a la derecha */
+    transform: translateY(-50vh) scale(0.9) rotate(15deg) translateX(40px);
+  }
+  100% {
+    /* Llega arriba con el tamaño máximo y se desvanece */
+    transform: translateY(-105vh) scale(1.5) rotate(-10deg) translateX(-30px);
+    opacity: 0;
+  }
+}
+
