@@ -5,20 +5,79 @@ const cejaDer = document.getElementById('ceja-der');
 const boca = document.getElementById('boca');
 const textoEmocion = document.getElementById('texto-emocion');
 
+// Estilos de sombreado 3D para la esfera de la carita
 const sombra3D = `
   inset -10px -15px 30px rgba(0, 0, 0, 0.25),
   inset 10px 15px 25px rgba(255, 255, 255, 0.4),
   0 12px 20px rgba(0, 0, 0, 0.15)
 `;
 
+let intervaloBurbujas = null;
+let intervaloConfeti = null;
+
+// Función para pintar el carril y el circulito deslizante de forma segura
+function actualizarColorBarra(color) {
+  slider.style.background = `${color}40`; // Fondo de la barra con transparencia
+  
+  let estiloThumb = document.getElementById('estilo-thumb');
+  if (!estiloThumb) {
+    estiloThumb = document.createElement('style');
+    estiloThumb.id = 'estilo-thumb';
+    document.head.appendChild(estiloThumb);
+  }
+  // Inyecta el color dinámicamente en el circulito para Chrome, Edge, Safari y Firefox
+  estiloThumb.innerHTML = `
+    input[type="range"]::-webkit-slider-thumb { background: ${color} !important; }
+    input[type="range"]::-moz-range-thumb { background: ${color} !important; }
+  `;
+}
+
+// FÁBRICA NATIVA DE BURBUJAS FLOTANTES
+function crearBurbuja() {
+  const burbuja = document.createElement('div');
+  burbuja.classList.add('burbuja');
+  const tamano = Math.random() * 30 + 15 + "px";
+  burbuja.style.width = tamano;
+  burbuja.style.height = tamano;
+  burbuja.style.left = Math.random() * 100 + "vw";
+  burbuja.style.animationDuration = Math.random() * 3 + 3 + "s";
+  document.body.appendChild(burbuja);
+  setTimeout(() => { burbuja.remove(); }, 6000);
+}
+
+// FÁBRICA NATIVA DE LLUVIA DE CONFETI
+function crearPedazoConfeti() {
+  const confeti = document.createElement('div');
+  confeti.classList.add('pedazo-confeti');
+  confeti.style.left = Math.random() * 100 + "vw";
+  
+  const colores = ['#FF4081', '#00E676', '#00B0FF', '#FFEA00', '#D500F9', '#FF6D00'];
+  confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+  
+  confeti.style.animationDuration = Math.random() * 1.5 + 2 + "s";
+  const tamano = Math.random() * 6 + 10 + "px";
+  confeti.style.width = tamano;
+  confeti.style.height = tamano;
+  
+  document.body.appendChild(confeti);
+  setTimeout(() => { confeti.remove(); }, 4000);
+}
+
+// Establecer color inicial verde para el estado por defecto "Calmado" (Nivel 4)
+actualizarColorBarra("#4CAF50");
+
 slider.addEventListener('input', (e) => {
   const estado = parseInt(e.target.value);
   
-  // Limpieza de estados especiales (como lentes de sol)
+  // Limpieza general de estados anteriores
   carita.classList.remove('genial');
   boca.style.border = 'none';
   boca.style.backgroundColor = 'transparent';
   boca.style.transform = "translateX(-50%) rotate(0deg)";
+  
+  // Detener fábricas activas al cambiar de emoción
+  if (intervaloBurbujas) { clearInterval(intervaloBurbujas); intervaloBurbujas = null; }
+  if (intervaloConfeti) { clearInterval(intervaloConfeti); intervaloConfeti = null; }
 
   switch(estado) {
     case 1: // TRISTE / MOLESTO
@@ -26,25 +85,28 @@ slider.addEventListener('input', (e) => {
       textoEmocion.style.color = "#2196F3";
       carita.style.backgroundColor = "#2196F3";
       carita.style.boxShadow = sombra3D;
+      actualizarColorBarra("#2196F3");
+      
       cejaIzq.style.transform = "rotate(15deg) translateY(4px)";
       cejaDer.style.transform = "rotate(-15deg) translateY(4px)";
-      boca.style.width = "40px";
-      boca.style.height = "20px";
-      boca.style.borderTop = "6px solid #222";
-      boca.style.borderRadius = "20px 20px 0 0";
+      boca.style.width = "80px";
+      boca.style.height = "40px";
+      boca.style.borderTop = "10px solid #222";
+      boca.style.borderRadius = "40px 40px 0 0";
       break;
 
-    case 2: // CANSADO (¡Nuevo!)
+    case 2: // CANSADO
       textoEmocion.textContent = "Cansado / Sin energía 🥱";
       textoEmocion.style.color = "#607D8B";
-      carita.style.backgroundColor = "#90A4AE"; // Azul grisáceo deslavado
+      carita.style.backgroundColor = "#90A4AE";
       carita.style.boxShadow = sombra3D;
+      actualizarColorBarra("#607D8B");
+      
       cejaIzq.style.transform = "rotate(-10deg) translateY(2px)";
       cejaDer.style.transform = "rotate(10deg) translateY(2px)";
-      // Boca entreabierta pequeña y triste
-      boca.style.width = "25px";
-      boca.style.height = "12px";
-      boca.style.border = "4px solid #222";
+      boca.style.width = "50px";
+      boca.style.height = "24px";
+      boca.style.border = "8px solid #222";
       boca.style.borderRadius = "50% / 10% 10% 90% 90%";
       break;
 
@@ -53,10 +115,12 @@ slider.addEventListener('input', (e) => {
       textoEmocion.style.color = "#9C27B0";
       carita.style.backgroundColor = "#B0BEC5";
       carita.style.boxShadow = sombra3D;
+      actualizarColorBarra("#9C27B0");
+      
       cejaIzq.style.transform = "rotate(0deg) translateY(0px)";
       cejaDer.style.transform = "rotate(0deg) translateY(0px)";
-      boca.style.width = "40px";
-      boca.style.height = "6px";
+      boca.style.width = "80px";
+      boca.style.height = "12px";
       boca.style.backgroundColor = "#222";
       boca.style.borderRadius = "0";
       break;
@@ -66,12 +130,14 @@ slider.addEventListener('input', (e) => {
       textoEmocion.style.color = "#4CAF50";
       carita.style.backgroundColor = "#A5D6A7";
       carita.style.boxShadow = sombra3D;
+      actualizarColorBarra("#4CAF50");
+      
       cejaIzq.style.transform = "translateY(-2px)";
       cejaDer.style.transform = "translateY(-2px)";
-      boca.style.width = "35px";
-      boca.style.height = "15px";
-      boca.style.borderBottom = "6px solid #222";
-      boca.style.borderRadius = "0 0 35px 35px";
+      boca.style.width = "70px";
+      boca.style.height = "30px";
+      boca.style.borderBottom = "10px solid #222";
+      boca.style.borderRadius = "0 0 70px 70px";
       break;
 
     case 5: // FELIZ
@@ -79,41 +145,51 @@ slider.addEventListener('input', (e) => {
       textoEmocion.style.color = "#FF9800";
       carita.style.backgroundColor = "#FFEB3B";
       carita.style.boxShadow = sombra3D;
+      actualizarColorBarra("#FF9800");
+      
       cejaIzq.style.transform = "rotate(-10deg) translateY(-4px)";
       cejaDer.style.transform = "rotate(10deg) translateY(-4px)";
-      boca.style.width = "50px";
-      boca.style.height = "25px";
-      boca.style.borderBottom = "6px solid #222";
-      boca.style.borderRadius = "0 0 50px 50px";
+      boca.style.width = "100px";
+      boca.style.height = "50px";
+      boca.style.borderBottom = "10px solid #222";
+      boca.style.borderRadius = "0 0 100px 100px";
       break;
 
-    case 6: // SÚPER EMOCIONADO
+    case 6: // SÚPER EMOCIONADO (Enciende burbujas)
       textoEmocion.textContent = "¡Súper Emocionado! 🤩";
       textoEmocion.style.color = "#E91E63";
       carita.style.backgroundColor = "#FF4081";
       carita.style.boxShadow = sombra3D;
+      actualizarColorBarra("#E91E63");
+      
       cejaIzq.style.transform = "translateY(-7px)";
       cejaDer.style.transform = "translateY(-7px)";
-      boca.style.width = "32px";
-      boca.style.height = "32px";
+      boca.style.width = "64px";
+      boca.style.height = "64px";
       boca.style.backgroundColor = "#222";
       boca.style.borderRadius = "50%";
+      
+      intervaloBurbujas = setInterval(crearBurbuja, 200); 
       break;
 
-    case 7: // GENIAL (¡Nuevo!)
+    case 7: // GENIAL (Enciende burbujas + lluvia de confeti)
       textoEmocion.textContent = "¡Genial / Cool! 😎";
       textoEmocion.style.color = "#7B1FA2";
-      carita.style.backgroundColor = "#E040FB"; // Morado neón brillante
+      carita.style.backgroundColor = "#E040FB";
       carita.style.boxShadow = sombra3D;
-      carita.classList.add('genial'); // Activa las gafas de sol en CSS
+      actualizarColorBarra("#7B1FA2");
+      
+      carita.classList.add('genial');
       cejaIzq.style.transform = "rotate(-5deg) translateY(-6px)";
       cejaDer.style.transform = "rotate(5deg) translateY(-6px)";
-      // Sonrisa ladina / de lado
-      boca.style.width = "35px";
-      boca.style.height = "15px";
-      boca.style.borderBottom = "6px solid #222";
-      boca.style.borderRadius = "0 0 35px 35px";
+      boca.style.width = "70px";
+      boca.style.height = "30px";
+      boca.style.borderBottom = "10px solid #222";
+      boca.style.borderRadius = "0 0 70px 70px";
       boca.style.transform = "translateX(-40%) rotate(-8deg)";
+      
+      intervaloBurbujas = setInterval(crearBurbuja, 200);
+      intervaloConfeti = setInterval(crearPedazoConfeti, 80); 
       break;
   }
 });
